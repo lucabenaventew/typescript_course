@@ -136,8 +136,10 @@ let thor = CreateHero({ name: 'Thor', age: 1500 })
 
 // Optional properties
 
+type ChatbotID = `${string}-${string}-${string}-${string}-${string}`
+
 type Chatbot = {
-  readonly id?: number
+	readonly id?: ChatbotID
 	model: string
 	temperature: number
 	max_tokens: number
@@ -152,13 +154,20 @@ let vendedorBot: Chatbot = {
 
 const createChatbot = (chatbot: Chatbot): Chatbot => {
 	const { model, temperature, max_tokens } = chatbot
-	return { model, temperature, max_tokens, isActive: true }
+	return {
+		id: crypto.randomUUID(),
+		model,
+		temperature,
+		max_tokens,
+		isActive: true,
+	}
 }
 
-const asistenteChatbot = Object.freeze(createChatbot({ // El Object.freeze() lo hace inmutable asi quitemos el readonly de type Chatbot
-	model: 'gpt-3.5-turbo',
-	temperature: 0.5,
-	max_tokens: 150,
-}))
-
-asistenteChatbot.id = 4243243242 // Esto no lo hace inmutable
+const asistenteChatbot = Object.freeze(
+	createChatbot({
+		// El Object.freeze() lo hace inmutable asi quitemos el readonly de type Chatbot
+		model: 'gpt-3.5-turbo',
+		temperature: 0.5,
+		max_tokens: 150,
+	})
+)
